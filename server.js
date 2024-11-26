@@ -2,9 +2,21 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const app = express();
+const PORT = 3000; // Define the port the server will listen on
 
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
+
+// Middleware to enable CORS
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200); // Handle preflight requests
+  }
+  next();
+});
 
 // Example valid coupons
 const validCoupons = ["SAVE10", "WELCOME20", "DISCOUNT30"];
@@ -26,5 +38,5 @@ app.post("/remoteurl", (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
